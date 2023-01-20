@@ -1,6 +1,8 @@
 {
   "name": "Ecent",
   "short_name": "Ecent",
+  "scoe": "/Ecent-web",
+  "start_url": "/Ecent-web",
   "icons": [
     {
       "src": "/icons/android-chrome-192x192.png",
@@ -28,7 +30,6 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff"
