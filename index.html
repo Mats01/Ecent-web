@@ -79,7 +79,7 @@
         let speed = 1;
         if (timeDiff > 50) {
           timeDiff = 1;
-          speed = Math.round((Math.abs((lastPostion - event.touches[0].screenY) / timeDiff)) * 10) / 10;
+          speed = Math.round((Math.abs((lastPostion - event.touches[0].screenY) / timeDiff))) / 10;
           document.getElementById('speed').innerHTML = speed.toFixed(2) + ' px/ms';
 
           lastUpdate = event.timeStamp;
