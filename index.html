@@ -86,7 +86,7 @@
         }
 
         if (speed < 0.5) {
-          value += Math.round((lastPostion - event.touches[0].screenY) * 10) / 10;
+          value += Math.round((lastPostion - event.touches[0].screenY)) / 10;
         } else {
           value += Math.round((lastPostion - event.touches[0].screenY) * speed * 10) / 10;
         }
