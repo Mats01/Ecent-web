@@ -45,11 +45,14 @@
   <h1 id="eur">0.00 €</h1>
   <h2 id="kn">0.00 kn</h2>
 
+
   <script>
     var dragging = false;
     var lastPostion = 0;
     var value = 0;
 
+    var acceleration = 0;
+    var lastUpdate = 0;
 
     // on document ready
     let dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -68,12 +71,35 @@
     addEventListener('touchmove', (event) => {
 
       if (dragging) {
+        if (lastUpdate == 0) lastUpdate = event.timeStamp;
 
-        value += (lastPostion - event.touches[0].screenY) / 10;
+
+        let timeDiff = event.timeStamp - lastUpdate;
+
+        let speed = 1;
+        if (timeDiff > 1) {
+          timeDiff = 1;
+          speed = (Math.abs((lastPostion - event.touches[0].screenY) / timeDiff));
+
+          lastUpdate = event.timeStamp;
+        }
+
+        if (speed < 2) {
+          value += Math.round((lastPostion - event.touches[0].screenY) * 0.3 * 10) / 10;
+
+        } else {
+          value += Math.round((lastPostion - event.touches[0].screenY) * 2 * 10) / 10;
+
+        }
+
+
         if (value < 0) value = 0;
 
         document.getElementById('eur').innerHTML = value.toFixed(2) + ' €';
         document.getElementById('kn').innerHTML = (value * 7.5345).toFixed(2) + ' kn';
+
+
+
         lastPostion = event.touches[0].screenY;
 
       }
@@ -88,6 +114,7 @@
 
     addEventListener('touchend', (event) => {
       dragging = false;
+      lastUpdate = 0;
 
     });
 
