@@ -44,7 +44,6 @@
 
   <h1 id="eur">0.00 €</h1>
   <h2 id="kn">0.00 kn</h2>
-  <p id="speed"></p>
 
   <script>
     var dragging = false;
@@ -80,7 +79,6 @@
         if (timeDiff > 50) {
           timeDiff = 1;
           speed = Math.round((Math.abs((lastPostion - event.touches[0].screenY) / timeDiff))) / 10;
-          document.getElementById('speed').innerHTML = speed.toFixed(2) + ' px/ms';
 
           lastUpdate = event.timeStamp;
         }
