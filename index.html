@@ -52,6 +52,8 @@
 
     var acceleration = 0;
     var lastUpdate = 0;
+    var dragStart = 0;
+    var startX = 0;
 
     // on document ready
     let dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -75,19 +77,26 @@
 
         let timeDiff = event.timeStamp - lastUpdate;
 
-        let speed = 1;
-        if (timeDiff > 50) {
+        let speed = 0.05;
+        let diff = lastPostion - event.touches[0].screenY;
+
+        if ((event.timeStamp - dragStart) > 500) {
           timeDiff = 1;
-          speed = Math.round((Math.abs((lastPostion - event.touches[0].screenY) / timeDiff))) / 10;
-
+          speed = Math.abs(diff) / timeDiff;
+          speed = speed;
           lastUpdate = event.timeStamp;
+          console.log(speed);
         }
 
-        if (speed < 0.5) {
-          value += Math.round((lastPostion - event.touches[0].screenY)) / 10;
-        } else {
-          value += Math.round((lastPostion - event.touches[0].screenY) * speed * 10) / 10;
-        }
+        diff = diff * 0.5;
+
+        diff = diff * speed;
+
+
+
+        value += diff;
+        value = Math.round(value * 10) / 10;
+
 
 
 
@@ -107,12 +116,25 @@
     addEventListener('touchstart', (event) => {
       dragging = true;
       lastPostion = event.touches[0].screenY;
-
+      dragStart = event.timeStamp;
+      startX = event.touches[0].screenX;
     });
 
     addEventListener('touchend', (event) => {
       dragging = false;
       lastUpdate = 0;
+      console.log(event.timeStamp - dragStart);
+      if ((event.timeStamp - dragStart) < 200) {
+        // if its over half the screen, add 1
+        if (startX < window.innerWidth / 2) {
+          value -= 0.1;
+        } else {
+          value += 0.1;
+        }
+        value = Math.max(0, value);
+        document.getElementById('eur').innerHTML = value.toFixed(2) + ' €';
+        document.getElementById('kn').innerHTML = (value * 7.5345).toFixed(2) + ' kn';
+      }
 
     });
 
