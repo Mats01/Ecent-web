@@ -10,6 +10,10 @@
 
   <link rel="manifest" href="manifest.json">
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+    integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <style>
     * {
       margin: 0;
@@ -29,7 +33,8 @@
       align-items: center;
       align-content: center;
       flex-direction: column;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+        'Helvetica Neue', sans-serif;
       background-color: #000;
       color: #fff;
     }
@@ -37,15 +42,309 @@
     script {
       display: none;
     }
+
+    .preferences,
+    .info {
+      position: absolute;
+
+      width: 80%;
+      height: 80%;
+      max-width: 600px;
+      max-height: 600px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: 24px;
+      /*nice bluish grey*/
+      color: #23252a;
+      display: none;
+    }
+
+    .preferences h2 {
+      flex-grow: 1;
+      margin-bottom: 10px;
+    }
+
+    .preferences h3 {
+      margin-top: 20px;
+    }
+
+    .info p {
+      font-size: 1.2em;
+      color: #1E1E1E;
+      margin: 20px 0;
+      line-height: 1.4em;
+    }
+
+    .preferences>div {
+      flex-grow: 3;
+      position: relative;
+    }
+
+    .color_picker {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      align-content: center;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      margin-top: 10px;
+    }
+
+    .color_picker>div {
+      width: 36px;
+      height: 36px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      margin: 4px;
+      border: 3px solid #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      align-content: center;
+
+    }
+
+    .color_picker>div>span {
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      background: #fff;
+      display: none;
+
+    }
+
+    .button {
+      max-height: 60px;
+      flex-grow: 1;
+      background: #23252a;
+      color: #fff;
+      border-radius: 5px;
+      text-align: center;
+      padding: 10px;
+      margin-top: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      font-size: 1.2em;
+      font-weight: bold;
+      justify-content: center;
+      align-items: center;
+      align-content: center;
+      vertical-align: middle;
+      display: flex;
+
+    }
+
+    .preferences .button {
+      position: absolute;
+      bottom: 20px;
+      left: '50%';
+      width: 80%;
+
+    }
+
+    .info .button {
+      position: absolute;
+      bottom: 20px;
+      left: '50%';
+      width: 80%;
+
+    }
+
+    .settings_button {
+      position: absolute;
+      top: 20px;
+      left: 10px;
+      font-size: 30px;
+      filter: contrast(80%) brightness(80%);
+
+    }
+
+    .price {
+      margin-left: 3px;
+      font-family: "Lucida Console", "Menlo", "Monaco", "Courier", monospace;
+
+    }
   </style>
+
+
 </head>
 
 <body>
 
+  <div class="settings_button" onclick="openSettins()">
+    <i class="fa-solid fa-palette"></i>
+  </div>
+
+  <div class="settings_button" style="left: 50px;" onclick="openInfo()">
+    <i class="fa-solid fa-circle-info"></i>
+  </div>
+
   <h1 id="eur">0.00 €</h1>
   <h2 id="kn">0.00 kn</h2>
 
+  <div class="info">
+    <h2>Info</h2>
+    <p>Tečaj <strong class="price">7.5345</strong>
+    </p>
+    <p><strong>Scrollaj</strong> prstom gore-dolje za promjenu cijene.</p>
+    <p><strong>Tap</strong> na <strong>lijevi</strong> dio ekrana smanuje cijenu za <strong
+        class="price">0.10€.</strong> </p>
+    <p><strong>Tap</strong> na <strong>desni</strong> dio ekrana povećava cijenu za <strong
+        class="price">0.10€.</strong>
+    </p>
+    <div onclick="saveSettings()" class="button">OK</div>
+
+  </div>
+
+  <div class="preferences">
+    <h2>Postavke</h2>
+    <div id="text_color">
+      <h3>Boja teksta</h3>
+      <div class="color_picker">
+        <div onclick='event.stopPropagation(); setTextColor("#fff")' style="background-color: #fff;" id="text-fff">
+          <span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setTextColor("#000")' style="background-color: #000;" id="text-000">
+          <span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setTextColor("#2A2A2A")' style="background-color: #2A2A2A;"
+          id="text-2A2A2A"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setTextColor("#F5A623")' style="background-color: #F5A623;"
+          id="text-F5A623"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setTextColor("#1E1E1E")' style="background-color: #1E1E1E;"
+          id="text-1E1E1E"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setTextColor("#A3CB38")' style="background-color: #A3CB38;"
+          id="text-A3CB38"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setTextColor("#8E8E8E")' style="background-color: #8E8E8E;"
+          id="text-8E8E8E"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setTextColor("#F44336")' style="background-color: #F44336;"
+          id="text-F44336"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setTextColor("#9B9B9B")' style="background-color: #9B9B9B;"
+          id="text-9B9B9B"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setTextColor("#0097A7")' style="background-color: #0097A7;"
+          id="text-0097A7"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setTextColor("#FFC107")' style="background-color: #FFC107;"
+          id="text-FFC107"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setTextColor("#FF5722")' style="background-color: #FF5722;"
+          id="text-FF5722"><span></span>
+        </div>
+      </div>
+    </div>
+    <div id="background_color">
+      <h3>Boja pozadine</h3>
+      <div class="color_picker">
+        <div onclick='event.stopPropagation(); setBackgroundColor("#fff")' style="background-color: #fff;"
+          id="background-fff">
+          <span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setBackgroundColor("#000")' style="background-color: #000;"
+          id="background-000">
+          <span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setBackgroundColor("#2A2A2A")' style="background-color: #2A2A2A;"
+          id="background-2A2A2A"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setBackgroundColor("#F5A623")' style="background-color: #F5A623;"
+          id="background-F5A623"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setBackgroundColor("#1E1E1E")' style="background-color: #1E1E1E;"
+          id="background-1E1E1E"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setBackgroundColor("#A3CB38")' style="background-color: #A3CB38;"
+          id="background-A3CB38"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setBackgroundColor("#8E8E8E")' style="background-color: #8E8E8E;"
+          id="background-8E8E8E"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setBackgroundColor("#F44336")' style="background-color: #F44336;"
+          id="background-F44336"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setBackgroundColor("#9B9B9B")' style="background-color: #9B9B9B;"
+          id="background-9B9B9B"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setBackgroundColor("#0097A7")' style="background-color: #0097A7;"
+          id="background-0097A7"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setBackgroundColor("#FFC107")' style="background-color: #FFC107;"
+          id="background-FFC107"><span></span>
+        </div>
+        <div onclick='event.stopPropagation(); setBackgroundColor("#FF5722")' style="background-color: #FF5722;"
+          id="background-FF5722"><span></span>
+        </div>
+      </div>
+    </div>
+    <div onclick="saveSettings()" class="button">Spremi</div>
+  </div>
+
   <script>
+    var settingsOpen = false;
+
+
+    const setTextColor = (color) => {
+      document.body.style.color = color;
+      // mark selected color
+      document.querySelectorAll(`#text_color span`).forEach((el) => {
+        el.style.display = 'none';
+      });
+      // add dot in the middle of selected color
+      document.querySelector(`#text-${color.replace('#', '')} > span`).style.display = 'block';
+      if (color == '#fff') {
+        document.querySelector(`#text-${color.replace('#', '')} > span`).style.backgroundColor = '#000';
+      }
+      localStorage.setItem('color', color);
+
+    }
+    const setBackgroundColor = (color) => {
+      document.body.style.backgroundColor = color;
+      // mark selected color
+      document.querySelectorAll(`#background_color span`).forEach((el) => {
+        el.style.display = 'none';
+      });
+      // add dot in the middle of selected color
+      document.querySelector(`#background-${color.replace('#', '')} > span`).style.display = 'block';
+      if (color == '#fff') {
+        document.querySelector(`#background-${color.replace('#', '')} > span`).style.backgroundColor = '#000';
+      }
+      localStorage.setItem('backgroundColor', color);
+
+    }
+
+    const saveSettings = () => {
+
+
+      // hide preferences
+      document.querySelector('.preferences').style.display = 'none';
+      document.querySelector('.info').style.display = 'none';
+      settingsOpen = false;
+    }
+
+    const openSettings = () => {
+      document.querySelector('.preferences').style.display = 'block';
+      settingsOpen = true;
+    }
+
+    const openInfo = () => {
+      document.querySelector('.info').style.display = 'block';
+      settingsOpen = true;
+    }
+
+
     var dragging = false;
     var lastPostion = 0;
     var value = 0;
@@ -70,6 +369,7 @@
 
 
     addEventListener('touchmove', (event) => {
+      if (settingsOpen) return;
 
       if (dragging) {
         if (lastUpdate == 0) lastUpdate = event.timeStamp;
@@ -85,7 +385,6 @@
           speed = Math.abs(diff) / timeDiff;
           speed = speed;
           lastUpdate = event.timeStamp;
-          console.log(speed);
         }
 
         diff = diff * 0.5;
@@ -114,6 +413,15 @@
     });
 
     addEventListener('touchstart', (event) => {
+      // if event target is icon, open settings
+      if (event.target.classList.contains('fa-solid')) {
+        if (event.target.classList.contains('fa-circle-info')) {
+          openInfo();
+        } else {
+          openSettings();
+        }
+        return;
+      }
       dragging = true;
       lastPostion = event.touches[0].screenY;
       dragStart = event.timeStamp;
@@ -121,10 +429,10 @@
     });
 
     addEventListener('touchend', (event) => {
+      if (settingsOpen) return;
       event.preventDefault();
       dragging = false;
       lastUpdate = 0;
-      console.log(event.timeStamp - dragStart);
       if ((event.timeStamp - dragStart) < 200) {
         // if its over half the screen, add 1
         if (startX < window.innerWidth / 2) {
@@ -160,6 +468,28 @@
         document.getElementById('kn').innerHTML = (value * 7.5345).toFixed(2) + ' kn';
         lastPostion = event.screenY;
 
+      }
+    });
+
+    // on document ready
+    addEventListener('DOMContentLoaded', (event) => {
+
+      if (window.innerWidth < 250) {
+        // hide icons
+        document.querySelectorAll('.settings_button').forEach((el) => {
+          el.style.display = 'none';
+        });
+      }
+      // load settings
+      let color = localStorage.getItem('color');
+      let backgroundColor = localStorage.getItem('backgroundColor');
+      // convert to hex
+
+      if (color) {
+        setTextColor(color);
+      }
+      if (backgroundColor) {
+        setBackgroundColor(backgroundColor);
       }
     });
   </script>
