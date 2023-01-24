@@ -121,6 +121,7 @@
     });
 
     addEventListener('touchend', (event) => {
+      event.preventDefault();
       dragging = false;
       lastUpdate = 0;
       console.log(event.timeStamp - dragStart);
