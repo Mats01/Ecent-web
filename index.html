@@ -172,6 +172,43 @@
       font-family: "Lucida Console", "Menlo", "Monaco", "Courier", monospace;
 
     }
+
+    .bottom_navbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: #23252a;
+      border-top: 1px solid #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      align-content: center;
+      flex-direction: row;
+    }
+
+    .bottom_navbar_item {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      align-content: center;
+      flex-direction: column;
+      flex-grow: 1;
+      flex-shrink: 1;
+      flex-basis: 0;
+      position: relative;
+      color: #686868;
+      font-size: large;
+      font-family: "San Francisco", "SF Pro Text", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+      font-weight: 500;
+    }
+
+    .bottom_navbar_item.active {
+      color: #fff;
+    }
   </style>
 
 
@@ -189,6 +226,16 @@
 
   <h1 id="eur">0.00 €</h1>
   <h2 id="kn">0.00 kn</h2>
+
+  <!-- bottom nav bar -->
+  <div class="bottom_navbar">
+    <div class="bottom_navbar_item" id="e2k" onclick="setMode('e2k')">
+      €/kn
+    </div>
+    <div class="bottom_navbar_item" id="f2c" onclick="setMode('f2c')">
+      °F/°C
+    </div>
+  </div>
 
   <div class="info">
     <h2>Info</h2>
@@ -296,6 +343,29 @@
   <script>
     var settingsOpen = false;
 
+    var mode = localStorage.getItem('mode');
+
+    if (mode !== 'f2c') {
+      document.getElementById('f2c').classList.remove('active');
+      document.getElementById('e2k').classList.add('active');
+    } else {
+      document.getElementById('f2c').classList.add('active');
+      document.getElementById('e2k').classList.remove('active');
+    }
+
+    const setMode = (m) => {
+      mode = m;
+      localStorage.setItem('mode', mode);
+      if (mode == 'f2c') {
+        document.getElementById('f2c').classList.add('active');
+        document.getElementById('e2k').classList.remove('active');
+      } else {
+        document.getElementById('f2c').classList.remove('active');
+        document.getElementById('e2k').classList.add('active');
+      }
+    }
+
+
 
     const setTextColor = (color) => {
       document.body.style.color = color;
@@ -400,11 +470,16 @@
 
 
 
-        if (value < 0) value = 0;
+        if (mode !== 'f2c' && value < 0) value = 0;
 
-        document.getElementById('eur').innerHTML = value.toFixed(2) + ' €';
-        document.getElementById('kn').innerHTML = (value * 7.5345).toFixed(2) + ' kn';
+        document.getElementById('eur').innerHTML = value.toFixed(2) + (mode === 'f2c' ? ' °F' : ' €');
+        if (mode === 'f2c') {
 
+          document.getElementById('kn').innerHTML = ((value - 32) * 5 / 9).toFixed(2) + ' °C';
+        } else {
+
+          document.getElementById('kn').innerHTML = (value * 7.5345).toFixed(2) + ' kn';
+        }
 
 
         lastPostion = event.touches[0].screenY;
@@ -442,8 +517,15 @@
           value += 0.1;
         }
         value = Math.max(0, value);
-        document.getElementById('eur').innerHTML = value.toFixed(2) + ' €';
-        document.getElementById('kn').innerHTML = (value * 7.5345).toFixed(2) + ' kn';
+        document.getElementById('eur').innerHTML = value.toFixed(2) + (mode === 'f2c' ? ' °F' : ' €');
+
+        if (mode === 'f2c') {
+
+          document.getElementById('kn').innerHTML = ((value - 32) * 5 / 9).toFixed(2) + ' °C';
+        } else {
+
+          document.getElementById('kn').innerHTML = (value * 7.5345).toFixed(2) + ' kn';
+        }
       }
 
     });
@@ -463,10 +545,17 @@
       if (dragging) {
 
         value += (lastPostion - event.screenY) / 10;
-        if (value < 0) value = 0;
+        if (mode !== 'f2c' && value < 0) value = 0;
 
-        document.getElementById('eur').innerHTML = value.toFixed(2) + ' €';
-        document.getElementById('kn').innerHTML = (value * 7.5345).toFixed(2) + ' kn';
+
+        document.getElementById('eur').innerHTML = value.toFixed(2) + (mode === 'f2c' ? ' °F' : ' €');
+        if (mode === 'f2c') {
+
+          document.getElementById('kn').innerHTML = ((value - 32) * 5 / 9).toFixed(2) + ' °C';
+        } else {
+
+          document.getElementById('kn').innerHTML = (value * 7.5345).toFixed(2) + ' kn';
+        }
         lastPostion = event.screenY;
 
       }
